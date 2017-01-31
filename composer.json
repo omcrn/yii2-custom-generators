@@ -1,0 +1,14 @@
+{
+    "name": "omcrn/yii2-custom-generators",
+    "description": "Advanced generators for yii2 gii module",
+    "require": {
+        "yiisoft/yii2-gii": "^2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zura Sekhniashvili",
+            "email": "zurasekhniashvili@gmail.com"
+        }
+    ]
+}
