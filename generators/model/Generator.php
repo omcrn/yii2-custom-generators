@@ -1,8 +1,8 @@
 <?php
 /**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+ * @link http://www.omicronsoft.net/
+ * @copyright Copyright (c) 2017 Omicronsoft GSC
+ * @license http://www.omicronsoft.net/license/
  */
 
 namespace omcrn\gii\generators\model;
@@ -11,10 +11,10 @@ use Yii;
 use yii\gii\CodeFile;
 
 /**
- * This generator will generate one or multiple ActiveRecord classes for the specified database table.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * @inheritdoc
+ * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+ * @package omcrn\gii\generators\model
  */
 class Generator extends \yii\gii\generators\model\Generator
 {
