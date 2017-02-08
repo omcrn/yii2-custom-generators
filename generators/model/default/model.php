@@ -12,6 +12,7 @@
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
+/* @var $behaviors array list of behaviors */
 
 echo "<?php\n";
 ?>
@@ -50,6 +51,20 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     public static function getDb()
     {
         return Yii::$app->get('<?= $generator->db ?>');
+    }
+<?php endif; ?>
+
+<?php if (!empty($behaviors)): ?>
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+<?php foreach ($behaviors as $behavior): ?>
+            <?= $behavior ?>
+<?php endforeach; ?>
+        ];
     }
 <?php endif; ?>
 
