@@ -7,7 +7,9 @@
 
 namespace omcrn\gii\generators\model;
 
+use omcrn\gii\helpers\Column;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\gii\CodeFile;
 
 /**
@@ -18,6 +20,21 @@ use yii\gii\CodeFile;
  */
 class Generator extends \yii\gii\generators\model\Generator
 {
+    public $possibleCreatedAtAttributes = ['create_date', 'created_at'];
+    public $possibleUpdatedAtAttributes = ['update_date', 'updated_at'];
+
+    public function init()
+    {
+        $timestampBehavior = new TimestampBehavior();
+        if (!in_array($timestampBehavior->createdAtAttribute, $this->possibleCreatedAtAttributes)){
+            $this->possibleCreatedAtAttributes[] = $timestampBehavior->createdAtAttribute;
+        }
+        if (!in_array($timestampBehavior->updatedAtAttribute, $this->possibleUpdatedAtAttributes)){
+            $this->possibleUpdatedAtAttributes[] = $timestampBehavior->updatedAtAttribute;
+        }
+        parent::init();
+    }
+
     /**
      * @inheritdoc
      */
@@ -73,16 +90,17 @@ class Generator extends \yii\gii\generators\model\Generator
         $createdAtAttribute = false;
         $updatedAtAttribute = false;
 
-        if ($this->isTimestampColumn($table, 'created_at')){
-            $createdAtAttribute = 'created_at';
-        } else if ($this->isTimestampColumn($table, 'create_date')) {
-            $createdAtAttribute = 'create_date';
+        foreach ($this->possibleCreatedAtAttributes as $columnName) {
+            if (Column::isUnixTimestampColumn($table, $columnName)){
+                $createdAtAttribute = $columnName;
+                break;
+            }
         }
-
-        if ($this->isTimestampColumn($table, 'updated_at')){
-            $updatedAtAttribute = 'updated_at';
-        } else if ($this->isTimestampColumn($table, 'update_date')) {
-            $updatedAtAttribute = 'update_date';
+        foreach ($this->possibleUpdatedAtAttributes as $columnName) {
+            if (Column::isUnixTimestampColumn($table, $columnName)){
+                $updatedAtAttribute = $columnName;
+                break;
+            }
         }
 
         if ($createdAtAttribute || $updatedAtAttribute){
@@ -94,18 +112,5 @@ class Generator extends \yii\gii\generators\model\Generator
         }
 
         return $behaviors;
-    }
-
-    /**
-     * Check if given column is type of timestamp or not
-     *
-     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
-     * @param \yii\db\TableSchema $table
-     * @param string $columnName
-     * @return bool
-     */
-    protected function isTimestampColumn($table, $columnName)
-    {
-        return array_key_exists($columnName, $table->columns) && strtolower($table->columns[$columnName]->dbType) === 'int(11)';
     }
 }
