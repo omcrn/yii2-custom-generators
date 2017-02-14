@@ -111,4 +111,16 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         return new <?= $queryClassFullName ?>(get_called_class());
     }
 <?php endif; ?>
+
+<?php if (!empty($dateFields)): ?>
+    public function beforeValidate()
+    {
+<?php foreach ($dateFields as  $dateField => $columnData){ ?>
+        <?php echo "if (\$this->$dateField) {
+            \$this->$dateField = \centigen\base\helpers\DateHelper::fromFormatIntoMysql(Yii::\$app->formatter->getPhpDatetimeFormat(), \$this->$dateField);
+        }" ?>;
+<?php } ?>
+        return parent::beforeValidate();
+    }
+<?php endif; ?>
 }

@@ -10,6 +10,7 @@ namespace omcrn\gii\generators\model;
 use omcrn\gii\helpers\Column;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ColumnSchema;
 use yii\gii\CodeFile;
 
 /**
@@ -56,7 +57,8 @@ class Generator extends \yii\gii\generators\model\Generator
                 'labels' => $this->generateLabels($tableSchema),
                 'rules' => $this->generateRules($tableSchema),
                 'relations' => isset($relations[$tableName]) ? $relations[$tableName] : [],
-                'behaviors' => $this->generateBehaviors($tableSchema)
+                'behaviors' => $this->generateBehaviors($tableSchema),
+                'dateFields' => $this->generateDateFields($tableSchema)
             ];
 //            \centigen\base\helpers\UtilHelper::vardump($tableName, $modelClassName, $queryClassName, $tableSchema);
 
@@ -112,5 +114,25 @@ class Generator extends \yii\gii\generators\model\Generator
         }
 
         return $behaviors;
+    }
+
+    /**
+     * Get all date or datetime fields
+     *
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     * @param \yii\db\TableSchema $tableSchema
+     * @return ColumnSchema[]
+     */
+    private function generateDateFields($tableSchema)
+    {
+//        \centigen\base\helpers\UtilHelper::vardump($tableSchema->columns);exit;
+        $dateFields = [];
+        foreach ($tableSchema->columns as $attribute => $column) {
+            if ($column->type === 'datetime' || $column->type === 'date' || $column->type === 'timestamp'){
+                $dateFields[$attribute] = $column;
+            }
+        }
+
+        return $dateFields;
     }
 }
